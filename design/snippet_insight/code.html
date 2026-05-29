@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Snippet Details - DevFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2a2a2a",
+                        "outline-variant": "#424754",
+                        "on-background": "#e5e2e1",
+                        "on-error-container": "#ffdad6",
+                        "primary-container": "#4d8eff",
+                        "on-surface": "#e5e2e1",
+                        "on-secondary": "#490080",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#353534",
+                        "on-tertiary-fixed": "#002113",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "tertiary-container": "#00a572",
+                        "on-secondary-container": "#d6a9ff",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-variant": "#353534",
+                        "secondary": "#ddb7ff",
+                        "surface-bright": "#393939",
+                        "primary": "#adc6ff",
+                        "surface-tint": "#adc6ff",
+                        "outline": "#8c909f",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-tertiary-container": "#00311f",
+                        "inverse-primary": "#005ac2",
+                        "secondary-container": "#6f00be",
+                        "inverse-on-surface": "#313030",
+                        "secondary-fixed": "#f0dbff",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-lowest": "#0e0e0e",
+                        "tertiary": "#4edea3",
+                        "on-surface-variant": "#c2c6d6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-primary": "#002e6a",
+                        "on-primary-container": "#00285d",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#d8e2ff",
+                        "on-tertiary": "#003824",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#001a42",
+                        "inverse-surface": "#e5e2e1",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface": "#131313",
+                        "surface-dim": "#131313",
+                        "on-secondary-fixed": "#2c0051",
+                        "background": "#131313",
+                        "surface-container": "#201f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "margin": "16px",
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "unit": "4px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "code-sm": ["JetBrains Mono"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-xs": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "code-md": ["14px", { "lineHeight": "22px", "fontWeight": "450" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "450" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #131313; color: #e5e2e1; }
+        /* Hide scrollbar for related horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar from JSON -->
+<header class="bg-surface/60 dark:bg-surface/60 backdrop-blur-xl fixed top-0 w-full border-b border-outline-variant/30 flex items-center justify-between px-margin h-16 z-50 transition-colors">
+<div class="flex items-center gap-2 text-primary dark:text-primary-fixed-dim hover:bg-surface-container-highest/50 transition-colors active:scale-95 duration-150 p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">terminal</span>
+</div>
+<div class="font-headline-md text-headline-md font-bold text-on-surface tracking-tighter">
+            DevFlow
+        </div>
+<div class="flex items-center gap-2 text-on-surface-variant hover:bg-surface-container-highest/50 transition-colors active:scale-95 duration-150 p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<!-- Note: BottomNavBar is explicitly suppressed because this is a 'Details' (Task-Focused) screen implying a departure from the main flow. -->
+<main class="flex-1 mt-16 px-margin py-stack-lg max-w-4xl mx-auto w-full">
+<!-- Back Navigation Context -->
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors font-body-sm text-body-sm mb-stack-lg group">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            Back to Snippets
+        </button>
+<!-- Snippet Header -->
+<div class="mb-stack-md flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-stack-sm">Debounce Function Implementation</h1>
+<div class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<img alt="Author avatar" class="w-6 h-6 rounded-full border border-outline-variant" data-alt="A small, circular avatar portrait of a modern software developer, wearing dark stylish clothing, set against a subtle, high-contrast dark background to match the application's technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFHK_04XujNe8JKY6w8qd9w7JHBMTmfboIizjIw1xzpXW4oIMmVvZOD2Gg0hifG7D1wis76IJ_A3b6brxIFe-2OCPQIUt-HHiIGv4W5tn02iP5eW549hjt9NXuTUZgm_fUqoLXzsT7dn2zwtwq0kN9JfT0T2IEPOwde4KzF16npN0R0aqTqgBacX3dW6i4YEd5Fi1KK4hKVnjNTGF76dOKQUyP2MsI-hGEFjba4xaEoCOzQcW1qZqUBXQnO0b_5W76a3fCGlE2Ucs"/>
+<span>@alex_dev</span>
+</div>
+<span>•</span>
+<span>2 hours ago</span>
+<span>•</span>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 rounded border border-outline-variant/50 bg-surface-container-low font-code-sm text-code-sm text-tertiary">TypeScript</span>
+<span class="px-2 py-0.5 rounded border border-outline-variant/50 bg-surface-container-low font-code-sm text-code-sm">Utils</span>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="flex items-center gap-2 self-start bg-surface-container-low border border-outline-variant/50 p-1 rounded-lg">
+<button class="p-2 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant hover:text-on-surface group relative" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<div class="w-px h-4 bg-outline-variant/30"></div>
+<button class="p-2 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant hover:text-on-surface" title="Share">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+<div class="w-px h-4 bg-outline-variant/30"></div>
+<button class="p-2 rounded hover:bg-primary/20 hover:text-primary transition-colors text-on-surface-variant flex items-center gap-1 bg-primary/10 text-primary border border-primary/20 ml-1" title="Copy Snippet">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-xs text-label-xs pr-1 hidden sm:inline">Copy</span>
+</button>
+</div>
+</div>
+<!-- Code Block Window -->
+<div class="bg-[#0e0e0e] border border-outline-variant/50 rounded-xl overflow-hidden shadow-2xl mb-stack-lg flex flex-col group">
+<!-- Window Header -->
+<div class="bg-surface-container-high px-4 py-2 border-b border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary">data_object</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">utils/debounce.ts</span>
+</div>
+<div class="flex gap-1.5 opacity-50 group-hover:opacity-100 transition-opacity">
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+<!-- Syntax Highlighted Content -->
+<div class="p-4 overflow-x-auto no-scrollbar font-code-md text-code-md leading-relaxed text-on-surface-variant">
+<pre><code><span class="text-secondary">export function</span> <span class="text-primary">debounce</span>&lt;<span class="text-tertiary">T</span> <span class="text-secondary">extends</span> (...args: <span class="text-tertiary">any</span>[]) =&gt; <span class="text-tertiary">any</span>&gt;(
+    <span class="text-on-surface">func</span>: <span class="text-tertiary">T</span>,
+    <span class="text-on-surface">wait</span>: <span class="text-tertiary">number</span>
+): (...args: <span class="text-tertiary">Parameters</span>&lt;<span class="text-tertiary">T</span>&gt;) =&gt; <span class="text-secondary">void</span> {
+    <span class="text-secondary">let</span> <span class="text-on-surface">timeoutId</span>: <span class="text-tertiary">ReturnType</span>&lt;<span class="text-secondary">typeof</span> <span class="text-tertiary">setTimeout</span>&gt; | <span class="text-tertiary">null</span> = <span class="text-primary">null</span>;
+
+    <span class="text-secondary">return function</span> <span class="text-on-surface">this</span>(<span class="text-on-surface">this</span>: <span class="text-tertiary">any</span>, ...<span class="text-on-surface">args</span>: <span class="text-tertiary">Parameters</span>&lt;<span class="text-tertiary">T</span>&gt;) {
+        <span class="text-secondary">if</span> (<span class="text-on-surface">timeoutId</span> !== <span class="text-primary">null</span>) {
+            <span class="text-primary">clearTimeout</span>(<span class="text-on-surface">timeoutId</span>);
+        }
+        
+        <span class="text-on-surface">timeoutId</span> = <span class="text-primary">setTimeout</span>(() =&gt; {
+            <span class="text-on-surface">func</span>.<span class="text-primary">apply</span>(<span class="text-on-surface">this</span>, <span class="text-on-surface">args</span>);
+        }, <span class="text-on-surface">wait</span>);
+    };
+}</code></pre>
+</div>
+</div>
+<!-- AI Explanation Panel (Purple Theme, Glassmorphism) -->
+<div class="relative overflow-hidden rounded-xl border border-secondary/30 bg-secondary-container/10 p-margin mb-stack-lg backdrop-blur-xl shadow-[0_8px_32px_rgba(111,0,190,0.05)]">
+<!-- Glassmorphism subtle gradient background -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-secondary/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-stack-sm text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-headline-md text-headline-md font-semibold">AI Explanation</h3>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant leading-relaxed space-y-3">
+<p>This implementation creates a robust debounce function in TypeScript. It ensures that the provided <code class="font-code-sm text-code-sm bg-secondary-container/20 px-1 rounded text-secondary-fixed">func</code> is only executed after <code class="font-code-sm text-code-sm bg-secondary-container/20 px-1 rounded text-secondary-fixed">wait</code> milliseconds have passed since the last time it was invoked.</p>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>Generics:</strong> Uses <code class="font-code-sm text-code-sm text-tertiary">T</code> to capture the precise signature of the input function, ensuring the returned function maintains full type safety for arguments.</li>
+<li><strong>Context Preservation:</strong> Utilizes <code class="font-code-sm text-code-sm text-primary">apply(this, args)</code> to ensure that the original execution context (<code class="font-code-sm text-code-sm">this</code>) is correctly preserved when the function finally fires.</li>
+</ul>
+</div>
+<div class="mt-4 flex gap-3">
+<button class="bg-secondary-container/30 hover:bg-secondary-container/50 text-secondary-fixed-dim font-label-xs text-label-xs py-1.5 px-3 rounded-lg border border-secondary/20 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span> Helpful
+                    </button>
+<button class="bg-surface/30 hover:bg-surface/50 text-on-surface-variant font-label-xs text-label-xs py-1.5 px-3 rounded-lg border border-outline-variant/30 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span> Ask Question
+                    </button>
+</div>
+</div>
+</div>
+<!-- Related Snippets Horizontal Scroll -->
+<div class="mt-stack-lg pt-stack-md border-t border-outline-variant/20">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">folder_open</span>
+                Related Utilities
+            </h4>
+<!-- Horizontal Scroll Container -->
+<div class="flex overflow-x-auto no-scrollbar gap-4 pb-4 snap-x snap-mandatory">
+<!-- Card 1 -->
+<a class="min-w-[240px] max-w-[240px] bg-surface border border-outline-variant/40 rounded-lg p-margin hover:bg-surface-container-highest/40 transition-colors snap-start flex flex-col group cursor-pointer" href="#">
+<div class="flex items-center justify-between mb-2">
+<span class="font-code-sm text-code-sm text-tertiary bg-tertiary-container/10 px-1.5 rounded">throttle.ts</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h5 class="font-body-md text-body-md font-semibold text-on-surface mb-1">Throttle Function</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Limits the rate at which a function can fire.</p>
+</a>
+<!-- Card 2 -->
+<a class="min-w-[240px] max-w-[240px] bg-surface border border-outline-variant/40 rounded-lg p-margin hover:bg-surface-container-highest/40 transition-colors snap-start flex flex-col group cursor-pointer" href="#">
+<div class="flex items-center justify-between mb-2">
+<span class="font-code-sm text-code-sm text-secondary bg-secondary-container/10 px-1.5 rounded">useDebounce.ts</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h5 class="font-body-md text-body-md font-semibold text-on-surface mb-1">React useDebounce</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">A custom React hook implementing debounce for state values.</p>
+</a>
+<!-- Card 3 -->
+<a class="min-w-[240px] max-w-[240px] bg-surface border border-outline-variant/40 rounded-lg p-margin hover:bg-surface-container-highest/40 transition-colors snap-start flex flex-col group cursor-pointer" href="#">
+<div class="flex items-center justify-between mb-2">
+<span class="font-code-sm text-code-sm text-primary bg-primary-container/10 px-1.5 rounded">deepClone.ts</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h5 class="font-body-md text-body-md font-semibold text-on-surface mb-1">Deep Clone Object</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Recursively copies values to break reference ties.</p>
+</a>
+</div>
+</div>
+</main>
+</body></html>

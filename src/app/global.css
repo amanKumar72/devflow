@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "nativewind/theme";
+
+/* =========================================
+   LIGHT THEME
+========================================= */
+
+:root {
+  /* Core */
+  --background: 252 249 248;
+  --foreground: 28 27 27;
+
+  /* Surface */
+  --surface: 252 249 248;
+  --surface-dim: 220 217 217;
+  --surface-bright: 252 249 248;
+
+  --surface-container-lowest: 255 255 255;
+  --surface-container-low: 246 243 242;
+  --surface-container: 240 237 236;
+  --surface-container-high: 235 231 231;
+  --surface-container-highest: 229 226 225;
+
+  /* Text */
+  --on-surface: 28 27 27;
+  --on-surface-variant: 90 65 54;
+
+  /* Brand */
+  --primary: 255 107 0;
+  --on-primary: 255 255 255;
+
+  --primary-container: 255 107 0;
+  --on-primary-container: 87 32 0;
+
+  --secondary: 95 94 94;
+  --on-secondary: 255 255 255;
+
+  --secondary-container: 228 226 225;
+  --on-secondary-container: 101 100 100;
+
+  --tertiary: 124 88 0;
+  --on-tertiary: 255 255 255;
+
+  --tertiary-container: 199 143 0;
+  --on-tertiary-container: 66 45 0;
+
+  /* Borders */
+  --outline: 142 113 100;
+  --outline-variant: 226 191 176;
+
+  /* Error */
+  --error: 186 26 26;
+  --on-error: 255 255 255;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Core */
+    --background: 19 19 19;
+    --foreground: 229 226 225;
+
+    /* Surface */
+    --surface: 19 19 19;
+    --surface-dim: 19 19 19;
+    --surface-bright: 58 57 57;
+
+    --surface-container-lowest: 14 14 14;
+    --surface-container-low: 28 27 27;
+    --surface-container: 32 31 31;
+    --surface-container-high: 42 42 42;
+    --surface-container-highest: 53 53 52;
+
+    /* Text */
+    --on-surface: 229 226 225;
+    --on-surface-variant: 226 191 176;
+
+    /* Brand */
+    --primary: 255 107 0;
+    --on-primary: 255 255 255;
+
+    --primary-container: 255 107 0;
+    --on-primary-container: 87 32 0;
+
+    --secondary: 200 198 197;
+    --on-secondary: 48 48 48;
+
+    --secondary-container: 71 71 70;
+    --on-secondary-container: 183 181 180;
+
+    --tertiary: 255 186 32;
+    --on-tertiary: 65 45 0;
+
+    --tertiary-container: 199 143 0;
+    --on-tertiary-container: 66 45 0;
+
+    /* Borders */
+    --outline: 169 138 125;
+    --outline-variant: 90 65 54;
+
+    /* Error */
+    --error: 255 180 171;
+    --on-error: 105 0 5;
+  }
+}
+
+/* =========================================
+   NATIVEWIND THEME TOKENS
+========================================= */
+
+@theme inline {
+  /* Backgrounds */
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+
+  --color-surface: rgb(var(--surface));
+  --color-surface-dim: rgb(var(--surface-dim));
+  --color-surface-bright: rgb(var(--surface-bright));
+
+  --color-surface-container-lowest: rgb(var(--surface-container-lowest));
+  --color-surface-container-low: rgb(var(--surface-container-low));
+  --color-surface-container: rgb(var(--surface-container));
+  --color-surface-container-high: rgb(var(--surface-container-high));
+  --color-surface-container-highest: rgb(var(--surface-container-highest));
+
+  /* Text */
+  --color-on-surface: rgb(var(--on-surface));
+  --color-on-surface-variant: rgb(var(--on-surface-variant));
+
+  /* Brand */
+  --color-primary: rgb(var(--primary));
+  --color-on-primary: rgb(var(--on-primary));
+
+  --color-primary-container: rgb(var(--primary-container));
+  --color-on-primary-container: rgb(var(--on-primary-container));
+
+  --color-secondary: rgb(var(--secondary));
+  --color-on-secondary: rgb(var(--on-secondary));
+
+  --color-secondary-container: rgb(var(--secondary-container));
+  --color-on-secondary-container: rgb(var(--on-secondary-container));
+
+  --color-tertiary: rgb(var(--tertiary));
+  --color-on-tertiary: rgb(var(--on-tertiary));
+
+  --color-tertiary-container: rgb(var(--tertiary-container));
+  --color-on-tertiary-container: rgb(var(--on-tertiary-container));
+
+  /* Borders */
+  --color-outline: rgb(var(--outline));
+  --color-outline-variant: rgb(var(--outline-variant));
+
+  /* Error */
+  --color-error: rgb(var(--error));
+  --color-on-error: rgb(var(--on-error));
+
+  /* Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-default: var(--radius);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+}
+
+/* =========================================
+   BASE STYLES
+========================================= */
+
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+}
+
+/* =========================================
+   OPTIONAL UTILITIES
+========================================= */
+
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass {
+  background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.card-shadow {
+  shadow-color: #000;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.05;
+  shadow-radius: 12px;
+  elevation: 3;
+}
+
+.glow-primary {
+  shadow-color: rgb(var(--primary));
+  shadow-offset: 0px 0px;
+  shadow-opacity: 0.2;
+  shadow-radius: 30px;
+  elevation: 8;
+}

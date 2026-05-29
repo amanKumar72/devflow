@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Save Snippet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=JetBrains+Mono:wght@450&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#201f1f",
+                        "on-tertiary-fixed": "#002113",
+                        "secondary": "#ddb7ff",
+                        "surface-container-highest": "#353534",
+                        "background": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "secondary-fixed": "#f0dbff",
+                        "on-primary": "#002e6a",
+                        "surface": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-dim": "#131313",
+                        "secondary-container": "#6f00be",
+                        "on-surface": "#e5e2e1",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#393939",
+                        "inverse-on-surface": "#313030",
+                        "on-background": "#e5e2e1",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-error": "#690005",
+                        "on-secondary-container": "#d6a9ff",
+                        "on-primary-fixed": "#001a42",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-container-high": "#2a2a2a",
+                        "primary": "#adc6ff",
+                        "on-tertiary-container": "#00311f",
+                        "on-tertiary": "#003824",
+                        "on-primary-fixed-variant": "#004395",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed": "#d8e2ff",
+                        "outline-variant": "#424754",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "primary-container": "#4d8eff",
+                        "inverse-primary": "#005ac2",
+                        "surface-tint": "#adc6ff",
+                        "outline": "#8c909f",
+                        "surface-variant": "#353534",
+                        "on-secondary": "#490080",
+                        "tertiary-container": "#00a572",
+                        "tertiary": "#4edea3",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#4edea3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "margin": "16px",
+                        "unit": "4px",
+                        "gutter": "12px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "code-md": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "code-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "code-md": ["14px", { "lineHeight": "22px", "fontWeight": "450" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-xs": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "450" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid #2A2A2A;
+        }
+        .dimmed-overlay {
+            background-color: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex items-center justify-center relative overflow-hidden">
+<!-- Mock Background (Snippets Library) -->
+<div class="absolute inset-0 pointer-events-none opacity-40 select-none z-0 p-margin flex flex-col gap-stack-md">
+<header class="flex justify-between items-center h-16 border-b border-surface-container-high pb-4">
+<h1 class="font-headline-lg text-headline-lg">Snippets</h1>
+<span class="material-symbols-outlined text-outline">search</span>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-margin">
+<div class="bg-surface-container rounded-lg p-margin border border-surface-container-high h-32"></div>
+<div class="bg-surface-container rounded-lg p-margin border border-surface-container-high h-32"></div>
+<div class="bg-surface-container rounded-lg p-margin border border-surface-container-high h-32"></div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-40 dimmed-overlay flex items-center justify-center p-margin">
+<!-- Modal Card -->
+<div class="glass-panel w-full max-w-[420px] rounded-xl flex flex-col overflow-hidden shadow-2xl z-50 transform transition-all">
+<!-- Header -->
+<div class="px-stack-lg py-stack-md border-b border-surface-container-high flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Save to Files</h2>
+<button class="text-outline-variant hover:text-on-surface transition-colors rounded-full p-1 hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Content Body -->
+<div class="p-stack-lg flex flex-col gap-stack-lg">
+<!-- Directory Selection -->
+<div class="flex flex-col gap-stack-sm">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Location</label>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-3 flex items-center gap-2 cursor-pointer hover:border-outline transition-colors group">
+<span class="material-symbols-outlined text-primary text-[20px] group-hover:text-primary-fixed transition-colors">folder_open</span>
+<div class="flex items-center gap-1 font-code-sm text-code-sm text-on-surface flex-wrap overflow-hidden whitespace-nowrap">
+<span class="text-outline">Internal Storage</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant">chevron_right</span>
+<span class="text-outline">DevFlow</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant">chevron_right</span>
+<span class="text-on-surface">Snippets</span>
+</div>
+</div>
+</div>
+<!-- File Name Input -->
+<div class="flex flex-col gap-stack-sm">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider" for="filename">File Name</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none material-symbols-outlined text-outline-variant text-[18px]">description</span>
+<input class="w-full bg-surface-container-lowest border border-surface-container-high rounded-lg pl-10 pr-4 py-3 font-code-md text-code-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all placeholder:text-outline-variant" id="filename" placeholder="Enter file name..." type="text" value="auth_middleware.ts"/>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="px-stack-lg py-stack-md bg-surface-container-lowest/50 border-t border-surface-container-high flex justify-end gap-stack-md">
+<button class="px-4 py-2 rounded-lg font-body-sm text-body-sm font-semibold text-primary hover:bg-primary/10 transition-colors">
+                    Cancel
+                </button>
+<button class="px-6 py-2 rounded-lg font-body-sm text-body-sm font-semibold bg-primary-container text-on-primary-container hover:bg-primary transition-colors flex items-center gap-2 shadow-[0_0_12px_rgba(77,142,255,0.2)]">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                    Save
+                </button>
+</div>
+</div>
+</div>
+<!-- Navigation Suppressed for Transactional/Task-Focused Modal -->
+</body></html>
