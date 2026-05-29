@@ -6,7 +6,7 @@ export const constants = {
 }
 
 export const initDatabase = async function initDatabase() {
-    db = await SQLite.openDatabaseAsync('snippy.db')
+    db = await SQLite.openDatabaseAsync('devflow.db')
     db.execSync(`
         CREATE TABLE IF NOT EXISTS ${constants.PROGRAMMING_LANGUAGE_TABLE_NAME} (
             id INTEGER PRIMARY KEY NOT NULL,

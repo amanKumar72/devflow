@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Snippy",
-    "slug": "Snippy",
+    "name": "devflow",
+    "slug": "devflow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "Snippy",
+    "scheme": "devflow",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.amankumar7210.Snippy"
+      "package": "com.amankumar7210.devflow"
     },
     "web": {
       "output": "static",

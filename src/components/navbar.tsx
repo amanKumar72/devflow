@@ -11,7 +11,7 @@ const Navbar = () => {
     <SafeAreaView>
       <StatusBar/>
       <View className='bg-background flex flex-row justify-between items-center p-4'>
-        <Text className='text-foreground font-bold text-lg'>Snippy</Text>
+        <Text className='text-foreground font-bold text-lg'>devflow</Text>
         <Toggle />
       </View>
     </SafeAreaView>
