@@ -10,15 +10,18 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Modal,
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { formatDate ,IconName, Icon , parseTags, normalizeParam, icons, withAlpha} from "@/utils/common";
 import { explainCode } from "@/utils/geminiAI";
 import { shareFile } from "@/utils/file-system";
 import { getItemFromAsyncStorage, setItemIntoAsyncStorage } from "@/utils/async-storage";
+import { DOWNLOAD_MIME_TYPES } from "@/utils/constants";
 const fallbackSnippet = {
   title: "Snippet not found",
   code: "// This snippet could not be loaded.",
@@ -38,8 +41,19 @@ export default function Snippit() {
   const [snippet, setSnippet] = useState<SnippitRecord | null>(null);
   const [related, setRelated] = useState<SnippitRecord[]>([]);
   const [aiResponse, setAiResponse] = useState('')
-
   const displaySnippet = snippet ?? fallbackSnippet;
+  const defaultShareType = useMemo(() => {
+    const language = displaySnippet.languageName?.toLowerCase();
+
+    return (
+      DOWNLOAD_MIME_TYPES.find((item) => item.label.toLowerCase() === language) ??
+      DOWNLOAD_MIME_TYPES[0]
+    );
+  }, [displaySnippet.languageName]);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [shareExtension, setShareExtension] = useState<string>(defaultShareType.extension);
+  const [shareMimeType, setShareMimeType] = useState<string>(defaultShareType.mimeType);
+
   const tags = useMemo(() => parseTags(displaySnippet.tags), [displaySnippet.tags]);
   const lines = useMemo(() => [displaySnippet.code], [displaySnippet.code]);
 
@@ -107,8 +121,18 @@ export default function Snippit() {
     const nextSnippet = await getSnippetsById(snippetId);
     setSnippet(nextSnippet ?? null);
   }
-  const handleShare = () =>{
-    console.log('sharing')
+  const openShare = () => {
+    setShareExtension(defaultShareType.extension);
+    setShareMimeType(defaultShareType.mimeType);
+    setIsShareOpen(true);
+  }
+
+  const handleShare = async () =>{
+    const extension = cleanExtension(shareExtension);
+    const fileName = `${cleanFileName(displaySnippet.title)}.${extension}`;
+
+    await shareFile(fileName, displaySnippet.code, shareMimeType.trim() || "text/plain");
+    setIsShareOpen(false);
   }
   if (isLoading) {
     return (
@@ -279,7 +303,7 @@ export default function Snippit() {
             onPress={() => router.push(`/snippit/create/${snippetId ?? ""}`)}
           />
           <Divider color={withAlpha(colors.outlineVariant, 0.45)} />
-          <ActionButton color={colors.onSurfaceVariant} icon={icons.share} onPress={()=>handleShare()}/>
+          <ActionButton color={colors.onSurfaceVariant} icon={icons.share} onPress={openShare}/>
           <Divider color={withAlpha(colors.outlineVariant, 0.45)} />
           <ActionButton
             color={colors.primary}
@@ -493,6 +517,186 @@ export default function Snippit() {
           </ScrollView>
         </View>
       </ScrollView>
+
+      <Modal
+        animationType="fade"
+        onRequestClose={() => setIsShareOpen(false)}
+        transparent
+        visible={isShareOpen}
+      >
+        <View
+          style={{
+            alignItems: "center",
+            backgroundColor: withAlpha(colors.background, 0.86),
+            flex: 1,
+            justifyContent: "center",
+            padding: 16,
+          }}
+        >
+          <Pressable
+            onPress={() => setIsShareOpen(false)}
+            style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
+          />
+          <View
+            style={{
+              backgroundColor: colors.surface,
+              borderColor: borderSubtle,
+              borderRadius: 16,
+              borderWidth: 1,
+              maxWidth: 440,
+              padding: 20,
+              width: "100%",
+            }}
+          >
+            <View
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: 16,
+              }}
+            >
+              <Text
+                style={{
+                  color: colors.onSurface,
+                  fontFamily: "Inter",
+                  fontSize: 22,
+                  fontWeight: "800",
+                }}
+              >
+                Share Snippet
+              </Text>
+              <Pressable hitSlop={12} onPress={() => setIsShareOpen(false)}>
+                <Icon color={colors.onSurfaceVariant} name={icons.close} size={22} />
+              </Pressable>
+            </View>
+
+            <Text
+              style={{
+                color: colors.onSurfaceVariant,
+                fontFamily: "Inter",
+                fontSize: 14,
+                lineHeight: 20,
+                marginBottom: 12,
+              }}
+            >
+              Choose the file extension and MIME type before sharing.
+            </Text>
+
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+              {DOWNLOAD_MIME_TYPES.map((item) => {
+                const selected =
+                  item.extension === cleanExtension(shareExtension) &&
+                  item.mimeType === shareMimeType;
+
+                return (
+                  <Pressable
+                    key={`${item.extension}-${item.mimeType}`}
+                    onPress={() => {
+                      setShareExtension(item.extension);
+                      setShareMimeType(item.mimeType);
+                    }}
+                    style={{
+                      backgroundColor: selected
+                        ? withAlpha(colors.primary, 0.16)
+                        : colors.surfaceContainerLow,
+                      borderColor: selected ? colors.primary : borderSubtle,
+                      borderRadius: 999,
+                      borderWidth: 1,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: selected ? colors.primary : colors.onSurfaceVariant,
+                        fontFamily: "Inter",
+                        fontSize: 13,
+                        fontWeight: "700",
+                      }}
+                    >
+                      .{item.extension}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <ShareField
+              borderColor={borderSubtle}
+              colors={colors}
+              label="Extension"
+              onChangeText={setShareExtension}
+              value={shareExtension}
+            />
+            <ShareField
+              borderColor={borderSubtle}
+              colors={colors}
+              label="MIME Type"
+              onChangeText={setShareMimeType}
+              value={shareMimeType}
+            />
+
+            <Text
+              style={{
+                color: colors.outline,
+                fontFamily: "JetBrains Mono",
+                fontSize: 12,
+                lineHeight: 18,
+                marginTop: 4,
+              }}
+            >
+              {cleanFileName(displaySnippet.title)}.{cleanExtension(shareExtension)}
+            </Text>
+
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 12,
+                justifyContent: "flex-end",
+                marginTop: 20,
+              }}
+            >
+              <Pressable onPress={() => setIsShareOpen(false)} style={{ padding: 12 }}>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontFamily: "Inter",
+                    fontSize: 15,
+                    fontWeight: "700",
+                  }}
+                >
+                  Cancel
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={handleShare}
+                style={{
+                  alignItems: "center",
+                  backgroundColor: colors.primaryContainer,
+                  borderRadius: 10,
+                  flexDirection: "row",
+                  gap: 8,
+                  paddingHorizontal: 18,
+                  paddingVertical: 12,
+                }}
+              >
+                <Icon color={colors.onPrimaryContainer} name={icons.share} size={18} />
+                <Text
+                  style={{
+                    color: colors.onPrimaryContainer,
+                    fontFamily: "Inter",
+                    fontSize: 15,
+                    fontWeight: "800",
+                  }}
+                >
+                  Share
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 
@@ -611,6 +815,66 @@ export default function Snippit() {
       </View>
     );
   }
+}
+
+function ShareField({
+  borderColor,
+  colors,
+  label,
+  onChangeText,
+  value,
+}: {
+  borderColor: string;
+  colors: ReturnType<typeof useTheme>["colors"];
+  label: string;
+  onChangeText: (text: string) => void;
+  value: string;
+}) {
+  return (
+    <View style={{ gap: 8, marginBottom: 12 }}>
+      <Text
+        style={{
+          color: colors.onSurfaceVariant,
+          fontFamily: "Inter",
+          fontSize: 11,
+          fontWeight: "800",
+          letterSpacing: 1.2,
+          textTransform: "uppercase",
+        }}
+      >
+        {label}
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={onChangeText}
+        value={value}
+        style={{
+          backgroundColor: colors.surfaceContainerLowest,
+          borderColor,
+          borderRadius: 10,
+          borderWidth: 1,
+          color: colors.onSurface,
+          fontFamily: "JetBrains Mono",
+          fontSize: 14,
+          minHeight: 48,
+          paddingHorizontal: 12,
+        }}
+      />
+    </View>
+  );
+}
+
+function cleanExtension(value: string) {
+  return value.replace(/^\./, "").replace(/[^a-zA-Z0-9]/g, "").trim() || "txt";
+}
+
+function cleanFileName(value: string) {
+  return value
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9._-]/g, "")
+    .replace(/^_+|_+$/g, "") || "snippet";
 }
 
 function slugify(value: string) {

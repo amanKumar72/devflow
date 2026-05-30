@@ -21,6 +21,10 @@ export const createAndGetDirectory = async (url: string, directory: DirectoryTyp
 export const createAndGetFile = async (fileName: string, content: string, mimeType: string = 'text/plain', directory: DirectoryType = 'document') => {
     try {
         const path = directory === 'document' ? Paths.document : Paths.cache
+        const dir = new Directory(path, SNIPPIT_DIRECTORY_NAME)
+        if (!dir.exists) {
+            dir.create()
+        }
         const file = new File(path,SNIPPIT_DIRECTORY_NAME, fileName)
         file.create({
             overwrite: true
@@ -57,11 +61,15 @@ export const saveFile = async (fileName: string, content: string, mimeType: stri
   
 export const shareFile = async (fileName: string, content: string, mimeType: string = 'text/plain')=>{
     try {
-        const file = await createAndGetFile(fileName, content, mimeType)
+        const file = await createAndGetFile(fileName, content, mimeType, 'cache')
         if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(file.uri);
+        await Sharing.shareAsync(file.uri, {
+          mimeType,
+          dialogTitle: fileName,
+        });
       }
     } catch (error) {
-        
+        console.error(error)
+        throw error
     }
 }

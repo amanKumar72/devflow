@@ -1,5 +1,6 @@
 import * as SQLite from "expo-sqlite";
-let db: SQLite.SQLiteDatabase;
+let db: SQLite.SQLiteDatabase | null = null;
+let initPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 export const constants = {
   PROGRAMMING_LANGUAGE_TABLE_NAME: "programming_language",
   SNIPPIT_TABLE_NAME: "snippit",
@@ -42,10 +43,32 @@ async function getDatabase() {
 }
 
 export const initDatabase = async function initDatabase() {
+  if (db) {
+    return db;
+  }
+
+  if (initPromise) {
+    return await initPromise;
+  }
+
+  initPromise = initializeDatabase();
+
   try {
-    if(!db) {
-        db = await SQLite.openDatabaseAsync("devflow.db");
-        db.execSync(`
+    db = await initPromise;
+    return db;
+  } catch (error) {
+    db = null;
+    console.error("Error initializing database:", error);
+    throw error;
+  } finally {
+    initPromise = null;
+  }
+};
+
+async function initializeDatabase() {
+  const database = await SQLite.openDatabaseAsync("devflow.db");
+
+  database.execSync(`
                 CREATE TABLE IF NOT EXISTS ${constants.PROGRAMMING_LANGUAGE_TABLE_NAME} (
                     id INTEGER PRIMARY KEY NOT NULL,
                     name TEXT NOT NULL,
@@ -54,7 +77,7 @@ export const initDatabase = async function initDatabase() {
                     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             `);
-        db.execSync(`
+  database.execSync(`
                 CREATE TABLE IF NOT EXISTS ${constants.SNIPPIT_TABLE_NAME} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL,
@@ -67,18 +90,14 @@ export const initDatabase = async function initDatabase() {
                     FOREIGN KEY (languageId) REFERENCES programming_language(id)
                 );
             `);
-        await seedProgrammingLanguages();
-    }
-    return db;
-    } catch (error) {
-        console.error("Error initializing database:", error);
-        throw error;
-    }
-};
+  await seedProgrammingLanguages(database);
 
-async function seedProgrammingLanguages() {
+  return database;
+}
+
+async function seedProgrammingLanguages(database: SQLite.SQLiteDatabase) {
   try {
-    const existing = await db.getFirstAsync<{ count: number }>(
+    const existing = await database.getFirstAsync<{ count: number }>(
     `SELECT COUNT(*) as count FROM ${constants.PROGRAMMING_LANGUAGE_TABLE_NAME}`,
   );
 
@@ -108,7 +127,7 @@ async function seedProgrammingLanguages() {
   ];
 
   for (const [name, icon] of languages) {
-    await db.runAsync(
+    await database.runAsync(
       `INSERT INTO ${constants.PROGRAMMING_LANGUAGE_TABLE_NAME} (name, icon) VALUES (?, ?)`,
       name,
       icon,
@@ -161,10 +180,15 @@ export const runQuery = async (query: string) => {
 
 export const closeDatabase = async () => {
   try {
-    const database = await getDatabase();
-    await database.closeAsync();
+    if (db) {
+      await db.closeAsync();
+      db = null;
+    }
+    initPromise = null;
   } catch (error) {
     console.error("Error closing database:", error);
+    db = null;
+    initPromise = null;
   }
 };
 
