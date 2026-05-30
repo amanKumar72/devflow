@@ -16,11 +16,7 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  Icon,
-  icons,
-  withAlpha,
-} from "@/utils/common";
+import { Icon, icons, withAlpha } from "@/utils/common";
 import { SnippetCard } from "@/components/snippit-card";
 import Header from "@/components/header";
 import SearchInput from "@/components/search-input";
@@ -48,7 +44,6 @@ export default function Snippits() {
   const loadSnippets = useCallback(async () => {
     setIsLoading(true);
     try {
-      await initDatabase();
       const nextSnippets = await getSnippets();
       const nextProgrammingLanguages = await getProgrammingLanguages();
       setProgrammingLanguages(nextProgrammingLanguages.map((pl) => pl.name));
@@ -72,7 +67,9 @@ export default function Snippits() {
     const visibleSnippets =
       activeFilter === "All"
         ? snippitsForFilter
-        : snippitsForFilter.filter((item) => item.languageName === activeFilter);
+        : snippitsForFilter.filter(
+            (item) => item.languageName === activeFilter,
+          );
     const newSnippets = visibleSnippets.filter(
       (item) =>
         item.title.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -100,16 +97,17 @@ export default function Snippits() {
 
       <View
         style={{
-          paddingBottom: 112,
+          paddingBottom: 80,
           paddingHorizontal: 16,
-          paddingTop: 28,
+          paddingTop: 8,
+          flex:1,
           backgroundColor: colors.background,
         }}
       >
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={{ flexGrow: 0, marginBottom: 28 }}
+          style={{ flexGrow: 0, marginBottom: 10 }}
         >
           <View style={{ columnGap: 12, flexDirection: "row" }}>
             {filters.map((filter) => {
@@ -207,18 +205,22 @@ export default function Snippits() {
           </View>
         ) : null}
 
-        <View style={{ rowGap: 28 }}>
-          {filteredSnippets.map((snippet) => (
-            <SnippetCard
-              borderColor={borderSubtle}
-              colors={colors}
-              key={snippet.id}
-              onFavorite={() => handleToggleFavorite(snippet.id)}
-              snippet={snippet}
-              theme={theme}
-            />
-          ))}
-        </View>
+          <View style={{flex:1}}>
+            <FlatList
+            data={filteredSnippets}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <SnippetCard
+                key={item.id}
+                borderColor={borderSubtle}
+                colors={colors}
+                onFavorite={() => handleToggleFavorite(item.id)}
+                snippet={item}
+                theme={theme}
+              />
+            )}
+          />
+          </View>
       </View>
 
       <Pressable

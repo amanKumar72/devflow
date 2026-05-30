@@ -1,4 +1,5 @@
 import {File, Paths, Directory} from 'expo-file-system'
+import {StorageAccessFramework} from 'expo-file-system/legacy'
 export const SNIPPIT_DIRECTORY_NAME = 'snippit'
 export type DirectoryType = 'document' | 'cache' ;
 
@@ -24,10 +25,32 @@ export const createAndGetFile = async (fileName: string, content: string, mimeTy
             overwrite: true
         });
         file.write(content)
-        return file.textSync()
+        return file
     } catch (error) {
         console.error(error)
         throw Error('Failed to create file')
     }
 }
+export const saveFile = async (fileName: string, content: string, mimeType: string = 'text/plain') => {
+    try {
+    // Ask user to pick a directory
+    const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
 
+    if (permissions.granted) {
+      const uri = permissions.directoryUri;
+
+      // Create a new .txt file in the chosen directory
+      const fileUri = await StorageAccessFramework.createFileAsync(
+        uri,
+        fileName,
+        mimeType
+      );
+
+      // Write content to it
+      await StorageAccessFramework.writeAsStringAsync(fileUri, content);
+    }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  

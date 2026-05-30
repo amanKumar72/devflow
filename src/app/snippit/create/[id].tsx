@@ -74,7 +74,6 @@ export default function CreateSnippit() {
 
     async function loadScreenData() {
       try {
-        await initDatabase();
         const nextLanguages = await getProgrammingLanguages();
         if (!isMounted) {
           return;

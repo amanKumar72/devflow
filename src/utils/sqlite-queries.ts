@@ -43,35 +43,37 @@ async function getDatabase() {
 
 export const initDatabase = async function initDatabase() {
   try {
-    db = await SQLite.openDatabaseAsync("devflow.db");
-  db.execSync(`
-        CREATE TABLE IF NOT EXISTS ${constants.PROGRAMMING_LANGUAGE_TABLE_NAME} (
-            id INTEGER PRIMARY KEY NOT NULL,
-            name TEXT NOT NULL,
-            icon TEXT NOT NULL,
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-  db.execSync(`
-        CREATE TABLE IF NOT EXISTS ${constants.SNIPPIT_TABLE_NAME} (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            code TEXT NOT NULL,
-            languageId INTEGER NOT NULL,
-            tags TEXT,
-            isFavorite INTEGER DEFAULT 0,
-            createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (languageId) REFERENCES programming_language(id)
-        );
-    `);
-  await seedProgrammingLanguages();
-  return db;
-  } catch (error) {
-    console.error("Error initializing database:", error);
-    throw error;
-  }
+    if(!db) {
+        db = await SQLite.openDatabaseAsync("devflow.db");
+        db.execSync(`
+                CREATE TABLE IF NOT EXISTS ${constants.PROGRAMMING_LANGUAGE_TABLE_NAME} (
+                    id INTEGER PRIMARY KEY NOT NULL,
+                    name TEXT NOT NULL,
+                    icon TEXT NOT NULL,
+                    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+        db.execSync(`
+                CREATE TABLE IF NOT EXISTS ${constants.SNIPPIT_TABLE_NAME} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    code TEXT NOT NULL,
+                    languageId INTEGER NOT NULL,
+                    tags TEXT,
+                    isFavorite INTEGER DEFAULT 0,
+                    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (languageId) REFERENCES programming_language(id)
+                );
+            `);
+        await seedProgrammingLanguages();
+    }
+    return db;
+    } catch (error) {
+        console.error("Error initializing database:", error);
+        throw error;
+    }
 };
 
 async function seedProgrammingLanguages() {

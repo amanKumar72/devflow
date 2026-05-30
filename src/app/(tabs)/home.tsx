@@ -17,7 +17,6 @@ export default function Home() {
   const load = useCallback(async () => {
     setIsLoading(true);
     try {
-      await initDatabase();
       const [all, favs] = await Promise.all([getSnippets(), getFavouratesSnippits()]);
       setRecent(all.slice(0, 6));
       setFavorites(favs.slice(0, 4));

@@ -50,7 +50,6 @@ export default function Snippit() {
 
     async function loadSnippet() {
       try {
-        await initDatabase();
         if (!snippetId) {
           setError("Missing snippet id.");
           return;

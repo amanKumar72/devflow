@@ -266,3 +266,15 @@ export const TAGS = [
   "AI",
   "Data Science",
 ];
+
+export const DOWNLOAD_MIME_TYPES = [
+  { label: "Plain Text", extension: "txt", mimeType: "text/plain" },
+  { label: "TypeScript", extension: "ts", mimeType: "text/typescript" },
+  { label: "JavaScript", extension: "js", mimeType: "text/javascript" },
+  { label: "JSON", extension: "json", mimeType: "application/json" },
+  { label: "HTML", extension: "html", mimeType: "text/html" },
+  { label: "CSS", extension: "css", mimeType: "text/css" },
+  { label: "Python", extension: "py", mimeType: "text/x-python" },
+  { label: "Rust", extension: "rs", mimeType: "text/rust" },
+  { label: "Go", extension: "go", mimeType: "text/x-go" },
+] as const;
