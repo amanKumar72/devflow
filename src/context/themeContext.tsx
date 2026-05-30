@@ -6,12 +6,20 @@ import {
 } from "react";
 import { Appearance, type ColorSchemeName } from "react-native";
 import { getItemFromAsyncStorage, setItemIntoAsyncStorage } from "@/utils/async-storage";
+import { colors } from "@/utils/constants";
 
 type Theme = "light" | "dark";
+type ThemeColors = typeof colors[Theme];
+type ThemeContextValue = {
+  theme: Theme;
+  toggleTheme: () => void;
+  colors: ThemeColors;
+};
 
-export const ThemeContext = createContext({
-  theme: "dark" as Theme,
+export const ThemeContext = createContext<ThemeContextValue>({
+  theme: "dark",
   toggleTheme: () => {},
+  colors: colors.dark,
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -46,6 +54,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       value={{
         theme,
         toggleTheme,
+        colors: colors[theme],
       }}
     >
       {children}

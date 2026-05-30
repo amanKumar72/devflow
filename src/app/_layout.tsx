@@ -1,16 +1,38 @@
 import { Stack } from "expo-router";
 import "./global.css";
-import { ThemeProvider } from "@/context/themeContext";
+import Provider from "@/context";
 import { useTheme } from "@/hooks/useTheme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function RootLayout() {
-  const theme = useTheme();
+function RootStack() {
+  const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
-    <ThemeProvider>
-      <Stack screenOptions={{
+    <Stack
+      screenOptions={{
         headerShown: false,
-      }} />
-    </ThemeProvider>
+        contentStyle: {
+          backgroundColor: colors.background,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left + 5,
+          paddingRight: insets.right + 5,
+        },
+      }}
+    >
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="snippit/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="snippit/create/index" options={{ headerShown: false }} />
+      <Stack.Screen name="snippit/create/[id]" options={{ headerShown: false }} />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <Provider>
+      <RootStack />
+    </Provider>
   );
 }
