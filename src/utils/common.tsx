@@ -69,6 +69,14 @@ export const icons = {
   favorite: { ios: "heart", android: "favorite", web: "favorite" },
   favoriteFilled: { ios: "heart.fill", android: "favorite", web: "favorite" },
   notes: { ios: "text.alignleft", android: "notes", web: "notes" },
+  bot: { ios: "cpu", android: "smart_toy", web: "smart_toy" },
+  box: { ios: "shippingbox", android: "deployed_code", web: "deployed_code" },
+  cache: { ios: "internaldrive", android: "hard_drive_2", web: "hard_drive_2" },
+  chevron: { ios: "chevron.right", android: "chevron_right", web: "chevron_right" },
+  flask: { ios: "flask", android: "science", web: "science" },
+  palette: { ios: "paintpalette", android: "palette", web: "palette" },
+  text: { ios: "textformat.size", android: "text_fields", web: "text_fields" },
+
 } satisfies Record<string, IconName>;
 
 export function Icon({

@@ -1,11 +1,10 @@
 import { useTheme } from "@/hooks/useTheme";
 import { getFavouratesSnippits, getSnippets, initDatabase, type Snippit } from "@/utils/sqlite-queries";
-import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { IconName,withAlpha, icons, Icon, languageColor } from "@/utils/common";
+import Header from "@/components/header";
 
 export default function Home() {
   const { colors, theme } = useTheme();
@@ -14,7 +13,6 @@ export default function Home() {
   const [recent, setRecent] = useState<Snippit[]>([]);
 
   const border = withAlpha(colors.outlineVariant, theme === "dark" ? 0.42 : 0.7);
-  const topBar = theme === "dark" ? withAlpha(colors.surface, 0.82) : withAlpha(colors.surface, 0.94);
 
   const load = useCallback(async () => {
     setIsLoading(true);
@@ -32,7 +30,7 @@ export default function Home() {
 
   return (
     <View style={{ backgroundColor: colors.background, flex: 1 }}>
-      <Header colors={colors} topBar={topBar} />
+      <Header colors={colors} theme={theme} label="Home" />
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 112, paddingTop: 5 }} style={{ flex: 1 }}>
         <SectionTitle action="View All" onAction={() => router.push("/snippits")} title="Favorites" colors={colors} />
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
@@ -71,16 +69,6 @@ export default function Home() {
       <Pressable onPress={() => router.push("/snippit/create")} style={{ alignItems: "center", backgroundColor: colors.primaryContainer, borderRadius: 999, bottom: 88, height: 64, justifyContent: "center", position: "absolute", right: 24, width: 64 }}>
         <Icon color={colors.onPrimaryContainer} name={icons.add} size={30} />
       </Pressable>
-    </View>
-  );
-}
-
-export function Header({ colors, topBar }: { colors: ReturnType<typeof useTheme>["colors"]; topBar: string }) {
-  return (
-    <View style={{ alignItems: "center", backgroundColor: topBar, borderBottomColor: withAlpha(colors.outlineVariant, 0.3), borderBottomWidth: 1, flexDirection: "row", height: 64, justifyContent: "space-between", paddingHorizontal: 16 }}>
-      <Icon color={colors.primary} name={icons.app} size={26} />
-      <Text style={{ color: colors.onSurface, fontFamily: "Inter", fontSize: 24, fontWeight: "800" }}>DevFlow</Text>
-      <View></View>
     </View>
   );
 }

@@ -1,31 +1,10 @@
 import { useTheme } from "@/hooks/useTheme";
-import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "@/components/header";
+import { Icon, IconName, icons, withAlpha } from "@/utils/common";
+import { setItemIntoAsyncStorage } from "@/utils/async-storage";
 
-type IconName = SymbolViewProps["name"];
-
-const icons = {
-  app: { ios: "terminal", android: "terminal", web: "terminal" },
-  bot: { ios: "cpu", android: "smart_toy", web: "smart_toy" },
-  box: { ios: "shippingbox", android: "deployed_code", web: "deployed_code" },
-  cache: { ios: "internaldrive", android: "hard_drive_2", web: "hard_drive_2" },
-  chevron: { ios: "chevron.right", android: "chevron_right", web: "chevron_right" },
-  flask: { ios: "flask", android: "science", web: "science" },
-  palette: { ios: "paintpalette", android: "palette", web: "palette" },
-  search: { ios: "magnifyingglass", android: "search", web: "search" },
-  text: { ios: "textformat.size", android: "text_fields", web: "text_fields" },
-} satisfies Record<string, IconName>;
-
-function withAlpha(hex: string, alpha: number) {
-  const value = hex.replace("#", "");
-  return `rgba(${parseInt(value.slice(0, 2), 16)}, ${parseInt(value.slice(2, 4), 16)}, ${parseInt(value.slice(4, 6), 16)}, ${alpha})`;
-}
-
-function Icon({ color, name, size = 22 }: { color: string; name: IconName; size?: number }) {
-  return <SymbolView name={name} size={size} tintColor={color} />;
-}
 
 export default function Settings() {
   const { colors, theme, toggleTheme } = useTheme();
@@ -33,19 +12,14 @@ export default function Settings() {
   const [fontSize, setFontSize] = useState(14);
   const border = withAlpha(colors.outlineVariant, theme === "dark" ? 0.35 : 0.7);
   const topBar = theme === "dark" ? withAlpha(colors.surface, 0.82) : withAlpha(colors.surface, 0.94);
-
+  useEffect(() => {
+    setItemIntoAsyncStorage("experimental", experimental);
+    setItemIntoAsyncStorage("fontSize", fontSize);
+  }, []);
   return (
     <View style={{ backgroundColor: colors.background, flex: 1 }}>
-      <View style={{ alignItems: "center", backgroundColor: topBar, borderBottomColor: withAlpha(colors.outlineVariant, 0.3), borderBottomWidth: 1, flexDirection: "row", height: 64, justifyContent: "space-between", paddingHorizontal: 16 }}>
-        <Icon color={colors.onSurfaceVariant} name={icons.app} size={26} />
-        <Text style={{ color: colors.onSurface, fontFamily: "Inter", fontSize: 24, fontWeight: "800" }}>DevFlow</Text>
-        <Icon color={colors.onSurfaceVariant} name={icons.search} size={28} />
-      </View>
-
+      <Header colors={colors} theme={theme} label="Settings" />
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 112 }} style={{ flex: 1 }}>
-        <Text style={{ color: colors.onSurface, fontFamily: "Inter", fontSize: 36, fontWeight: "800", lineHeight: 44 }}>Settings</Text>
-        <Text style={{ color: colors.onSurfaceVariant, fontFamily: "Inter", fontSize: 16, lineHeight: 24, marginBottom: 28, marginTop: 6 }}>Manage environment and preferences.</Text>
-
         <Panel border={border} colors={colors}>
           <Label colors={colors} text="Appearance" />
           <Row colors={colors} icon={icons.palette} label="Theme">

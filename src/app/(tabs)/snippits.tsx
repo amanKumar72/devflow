@@ -5,43 +5,45 @@ import {
   toggleFavourate,
   getProgrammingLanguages,
   type Snippit,
-  deleteData,
 } from "@/utils/sqlite-queries";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { parseCodePreview,Icon,IconName,icons,withAlpha,formatDate,parseTags,normalizeParam,languageColor } from "@/utils/common";
+import {
+  Icon,
+  icons,
+  withAlpha,
+} from "@/utils/common";
 import { SnippetCard } from "@/components/snippit-card";
+import Header from "@/components/header";
+import SearchInput from "@/components/search-input";
 
 export default function Snippits() {
   const { colors, theme } = useTheme();
   const [activeFilter, setActiveFilter] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [snippets, setSnippets] = useState<Snippit[]>([]);
-  const [programmingLanguages, setProgrammingLanguages] = useState<string[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [filteredSnippets, setFilteredSnippets] = useState<Snippit[]>([]);
+  const [programmingLanguages, setProgrammingLanguages] = useState<string[]>(
+    [],
+  );
 
-  const borderSubtle = withAlpha(colors.outlineVariant, theme === "dark" ? 0.42 : 0.72);
-  const topBarBackground =
-    theme === "dark" ? withAlpha(colors.surface, 0.82) : withAlpha(colors.surface, 0.94);
+  const borderSubtle = withAlpha(
+    colors.outlineVariant,
+    theme === "dark" ? 0.42 : 0.72,
+  );
 
   const filters = useMemo(() => {
     return Array.from(new Set(["All", ...programmingLanguages]));
   }, [programmingLanguages]);
-
-  const visibleSnippets = useMemo(() => {
-    if (activeFilter === "All") {
-      return snippets;
-    }
-
-    return snippets.filter((snippet) => snippet.languageName === activeFilter);
-  }, [activeFilter, snippets]);
 
   const loadSnippets = useCallback(async () => {
     setIsLoading(true);
@@ -49,9 +51,9 @@ export default function Snippits() {
       await initDatabase();
       const nextSnippets = await getSnippets();
       const nextProgrammingLanguages = await getProgrammingLanguages();
-      console.log(nextProgrammingLanguages)
       setProgrammingLanguages(nextProgrammingLanguages.map((pl) => pl.name));
       setSnippets(nextSnippets);
+      setFilteredSnippets(nextSnippets);
     } catch (error) {
       console.error(error);
     } finally {
@@ -62,54 +64,47 @@ export default function Snippits() {
   useFocusEffect(
     useCallback(() => {
       loadSnippets();
-    }, [loadSnippets])
+    }, [loadSnippets]),
   );
+
+  const handleFilterChange = (newFilteredSnippets?: Snippit[] | undefined) => {
+    const snippitsForFilter = newFilteredSnippets || snippets;
+    const visibleSnippets =
+      activeFilter === "All"
+        ? snippitsForFilter
+        : snippitsForFilter.filter((item) => item.languageName === activeFilter);
+    const newSnippets = visibleSnippets.filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.languageName?.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.tags?.toLocaleLowerCase().includes(searchText.toLowerCase()),
+    );
+    setFilteredSnippets(newSnippets);
+  };
+
+  useEffect(() => {
+    handleFilterChange();
+  }, [activeFilter, searchText]);
 
   async function handleToggleFavorite(snippetId: number) {
     await toggleFavourate(snippetId);
     const nextSnippets = await getSnippets();
     setSnippets(nextSnippets);
+    handleFilterChange(nextSnippets);
   }
 
   return (
     <View style={{ backgroundColor: colors.background, flex: 1 }}>
+      <Header colors={colors} theme={theme} label="Snippits" />
+      <SearchInput onChangeText={(text) => setSearchText(text)} />
+
       <View
         style={{
-          alignItems: "center",
-          backgroundColor: topBarBackground,
-          borderBottomColor: withAlpha(colors.outlineVariant, 0.3),
-          borderBottomWidth: 1,
-          flexDirection: "row",
-          height: 64,
-          justifyContent: "space-between",
-          paddingHorizontal: 16,
-        }}
-      >
-        <View style={{ alignItems: "center", columnGap: 10, flexDirection: "row" }}>
-          <Icon color={colors.primary} name={icons.app} size={28} />
-          <Text
-            style={{
-              color: colors.onSurface,
-              fontFamily: "Inter",
-              fontSize: 28,
-              fontWeight: "700",
-              lineHeight: 34,
-            }}
-          >
-            All Snippets
-          </Text>
-        </View>
-
-        <Icon color={colors.onSurfaceVariant} name={icons.search} size={30} />
-      </View>
-
-      <ScrollView
-        contentContainerStyle={{
           paddingBottom: 112,
           paddingHorizontal: 16,
           paddingTop: 28,
+          backgroundColor: colors.background,
         }}
-        style={{ backgroundColor: colors.background, flex: 1 }}
       >
         <ScrollView
           horizontal
@@ -127,7 +122,10 @@ export default function Snippits() {
                   style={{
                     alignItems: "center",
                     backgroundColor: isSelected
-                      ? withAlpha(colors.primaryContainer, theme === "dark" ? 0.28 : 1)
+                      ? withAlpha(
+                          colors.primaryContainer,
+                          theme === "dark" ? 0.28 : 1,
+                        )
                       : "transparent",
                     borderColor: isSelected ? colors.primary : borderSubtle,
                     borderRadius: 999,
@@ -139,7 +137,9 @@ export default function Snippits() {
                 >
                   <Text
                     style={{
-                      color: isSelected ? colors.primary : colors.onSurfaceVariant,
+                      color: isSelected
+                        ? colors.primary
+                        : colors.onSurfaceVariant,
                       fontFamily: "Inter",
                       fontSize: 14,
                       fontWeight: "700",
@@ -170,7 +170,7 @@ export default function Snippits() {
           </View>
         ) : null}
 
-        {!isLoading && visibleSnippets.length === 0 ? (
+        {!isLoading && filteredSnippets.length === 0 ? (
           <View
             style={{
               alignItems: "center",
@@ -208,7 +208,7 @@ export default function Snippits() {
         ) : null}
 
         <View style={{ rowGap: 28 }}>
-          {visibleSnippets.map((snippet) => (
+          {filteredSnippets.map((snippet) => (
             <SnippetCard
               borderColor={borderSubtle}
               colors={colors}
@@ -219,7 +219,7 @@ export default function Snippits() {
             />
           ))}
         </View>
-      </ScrollView>
+      </View>
 
       <Pressable
         onPress={() => router.push("/snippit/create")}

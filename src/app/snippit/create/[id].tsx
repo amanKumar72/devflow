@@ -21,11 +21,13 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { parseTags, icons, withAlpha, Icon, normalizeParam } from "@/utils/common";
+import { getItemFromAsyncStorage } from "@/utils/async-storage";
 
 
 
 export default function CreateSnippit() {
   const { colors, theme } = useTheme();
+  const [fontSize, setFontSize] = useState<number>(14);
   const params = useLocalSearchParams();
   const snippetId = normalizeParam(params.id);
 
@@ -69,20 +71,18 @@ export default function CreateSnippit() {
 
   useEffect(() => {
     let isMounted = true;
-    console.log("snippetId", snippetId);
 
     async function loadScreenData() {
       try {
         await initDatabase();
         const nextLanguages = await getProgrammingLanguages();
-        console.log("nextLanguages", nextLanguages);
-        console.log("all snippits", await readData('snippit'));
         if (!isMounted) {
           return;
         }
 
         setLanguages(nextLanguages);
         setSelectedLanguageId(nextLanguages[0]?.id ?? 1);
+        setFontSize(Number(await getItemFromAsyncStorage("fontSize") ?? "14"));
 
         if (!snippetId) {
           setTitle("");
@@ -574,7 +574,7 @@ export default function CreateSnippit() {
                   color: colors.onSurface,
                   flex: 1,
                   fontFamily: "JetBrains Mono",
-                  fontSize: 14,
+                  fontSize: fontSize,
                   lineHeight: 22,
                   minHeight: 520,
                   padding: 12,
