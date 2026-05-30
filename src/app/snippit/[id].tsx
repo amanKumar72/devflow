@@ -16,6 +16,9 @@ import {
   View,
 } from "react-native";
 import { formatDate ,IconName, Icon , parseTags, normalizeParam, icons, withAlpha} from "@/utils/common";
+import { explainCode } from "@/utils/geminiAI";
+import { shareFile } from "@/utils/file-system";
+import { getItemFromAsyncStorage, setItemIntoAsyncStorage } from "@/utils/async-storage";
 const fallbackSnippet = {
   title: "Snippet not found",
   code: "// This snippet could not be loaded.",
@@ -34,10 +37,11 @@ export default function Snippit() {
   const [isLoading, setIsLoading] = useState(true);
   const [snippet, setSnippet] = useState<SnippitRecord | null>(null);
   const [related, setRelated] = useState<SnippitRecord[]>([]);
+  const [aiResponse, setAiResponse] = useState('')
 
   const displaySnippet = snippet ?? fallbackSnippet;
   const tags = useMemo(() => parseTags(displaySnippet.tags), [displaySnippet.tags]);
-  const lines = useMemo(() => displaySnippet.code.split("\n"), [displaySnippet.code]);
+  const lines = useMemo(() => [displaySnippet.code], [displaySnippet.code]);
 
   const borderSubtle = withAlpha(colors.outlineVariant, theme === "dark" ? 0.46 : 0.72);
   const topBarBackground =
@@ -57,12 +61,19 @@ export default function Snippit() {
 
         const nextSnippet = await getSnippetsById(snippetId);
         const allSnippets = await getSnippets();
-
+        let key = `explaination:${snippetId}`
+        let explained = await getItemFromAsyncStorage(key)
+        console.log("from store", explained)
+        if(!explained) {
+          explained = await explainCode(nextSnippet?.code || '')
+          await setItemIntoAsyncStorage(key, explained)
+        }
         if (!isMounted) {
           return;
         }
 
         setSnippet(nextSnippet ?? null);
+        setAiResponse(explained)
         setRelated(allSnippets.filter((item) => item.id !== snippetId).slice(0, 6));
 
         if (!nextSnippet) {
@@ -96,7 +107,9 @@ export default function Snippit() {
     const nextSnippet = await getSnippetsById(snippetId);
     setSnippet(nextSnippet ?? null);
   }
-
+  const handleShare = () =>{
+    console.log('sharing')
+  }
   if (isLoading) {
     return (
       <View
@@ -266,7 +279,7 @@ export default function Snippit() {
             onPress={() => router.push(`/snippit/create/${snippetId ?? ""}`)}
           />
           <Divider color={withAlpha(colors.outlineVariant, 0.45)} />
-          <ActionButton color={colors.onSurfaceVariant} icon={icons.share} />
+          <ActionButton color={colors.onSurfaceVariant} icon={icons.share} onPress={()=>handleShare()}/>
           <Divider color={withAlpha(colors.outlineVariant, 0.45)} />
           <ActionButton
             color={colors.primary}
@@ -346,15 +359,15 @@ export default function Snippit() {
               {lines.map((line, index) => (
                 <Text
                   key={`${index}-${line}`}
+                  selectable
                   style={{
                     color: colors.onSurfaceVariant,
                     fontFamily: "JetBrains Mono",
                     fontSize: 14,
                     lineHeight: 22,
+                    paddingHorizontal: 4
                   }}
                 >
-                  <Text style={{ color: withAlpha(colors.outline, 0.52) }}>
-                    {String(index + 1).padStart(2, " ")}  </Text>
                   {line || " "}
                 </Text>
               ))}
@@ -397,26 +410,8 @@ export default function Snippit() {
               marginBottom: 12,
             }}
           >
-            This snippet stores a reusable implementation for {displaySnippet.languageName ?? "your project"}.
-            It is tagged for quick lookup and can be copied, edited, or saved as a favorite from this view.
+            {aiResponse}
           </Text>
-
-          <Text
-            style={{
-              color: colors.onSurfaceVariant,
-              fontFamily: "Inter",
-              fontSize: 15,
-              fontWeight: "600",
-              lineHeight: 24,
-            }}
-          >
-            • Code length: {lines.length} lines{"\n"}• Tags: {tags.length ? tags.join(", ") : "None"}
-          </Text>
-
-          <View style={{ columnGap: 12, flexDirection: "row", marginTop: 16 }}>
-            <SmallButton color={colors.secondary} icon={icons.thumb} label="Helpful" />
-            <SmallButton color={colors.onSurfaceVariant} icon={icons.chat} label="Ask Question" />
-          </View>
         </View>
 
         <View

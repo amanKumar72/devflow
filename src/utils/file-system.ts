@@ -1,5 +1,6 @@
 import {File, Paths, Directory} from 'expo-file-system'
 import {StorageAccessFramework} from 'expo-file-system/legacy'
+import * as Sharing from "expo-sharing";
 export const SNIPPIT_DIRECTORY_NAME = 'snippit'
 export type DirectoryType = 'document' | 'cache' ;
 
@@ -54,3 +55,13 @@ export const saveFile = async (fileName: string, content: string, mimeType: stri
     }
   };
   
+export const shareFile = async (fileName: string, content: string, mimeType: string = 'text/plain')=>{
+    try {
+        const file = await createAndGetFile(fileName, content, mimeType)
+        if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(file.uri);
+      }
+    } catch (error) {
+        
+    }
+}
