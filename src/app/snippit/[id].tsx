@@ -22,6 +22,7 @@ import { explainCode } from "@/utils/geminiAI";
 import { shareFile } from "@/utils/file-system";
 import { getItemFromAsyncStorage, setItemIntoAsyncStorage } from "@/utils/async-storage";
 import { DOWNLOAD_MIME_TYPES } from "@/utils/constants";
+import { copyTextToClipboard } from "@/utils/clipboard";
 const fallbackSnippet = {
   title: "Snippet not found",
   code: "// This snippet could not be loaded.",
@@ -41,6 +42,7 @@ export default function Snippit() {
   const [snippet, setSnippet] = useState<SnippitRecord | null>(null);
   const [related, setRelated] = useState<SnippitRecord[]>([]);
   const [aiResponse, setAiResponse] = useState('')
+  const [copyMessage, setCopyMessage] = useState("");
   const displaySnippet = snippet ?? fallbackSnippet;
   const defaultShareType = useMemo(() => {
     const language = displaySnippet.languageName?.toLowerCase();
@@ -120,6 +122,23 @@ export default function Snippit() {
     await toggleFavourate(snippetId);
     const nextSnippet = await getSnippetsById(snippetId);
     setSnippet(nextSnippet ?? null);
+  }
+
+  const handleCodeCopy = async () => {
+    const copied = await copyTextToClipboard(displaySnippet.code);
+    setCopyMessage(
+      copied
+        ? "Copied snippet to clipboard."
+        : "Install expo-clipboard to enable native copy."
+    );
+  }
+  const handleAiResponseCopy = async () => {
+    const copied = await copyTextToClipboard(aiResponse);
+    setCopyMessage(
+      copied
+        ? "Copied snippet to clipboard."
+        : "Install expo-clipboard to enable native copy."
+    );
   }
   const openShare = () => {
     setShareExtension(defaultShareType.extension);
@@ -309,10 +328,24 @@ export default function Snippit() {
             color={colors.primary}
             icon={icons.copy}
             label="Copy"
-            onPress={handleFavorite}
+            onPress={handleCodeCopy}
             selected
           />
         </View>
+
+        {copyMessage ? (
+          <Text
+            style={{
+              color: colors.tertiary,
+              fontFamily: "Inter",
+              fontSize: 14,
+              lineHeight: 20,
+              marginBottom: 12,
+            }}
+          >
+            {copyMessage}
+          </Text>
+        ) : null}
 
         {error ? (
           <Text
@@ -412,7 +445,8 @@ export default function Snippit() {
         >
           <View style={{ alignItems: "center", columnGap: 8, flexDirection: "row", marginBottom: 8 }}>
             <Icon color={colors.secondary} name={icons.sparkles} size={20} />
-            <Text
+            <View className="flex-1 flex-row justify-between align-items-center pt-3">
+              <Text
               style={{
                 color: colors.secondary,
                 fontFamily: "Inter",
@@ -423,6 +457,14 @@ export default function Snippit() {
             >
               AI Explanation
             </Text>
+            <ActionButton
+              color={colors.primary}
+              icon={icons.copy}
+              label="Copy"
+              onPress={handleAiResponseCopy}
+              selected
+            />
+            </View>
           </View>
 
           <Text
