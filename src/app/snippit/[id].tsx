@@ -6,7 +6,6 @@ import {
   toggleFavourate,
   type Snippit as SnippitRecord,
 } from "@/utils/sqlite-queries";
-import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -16,24 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-type IconName = SymbolViewProps["name"];
-
-const icons = {
-  app: { ios: "terminal", android: "terminal", web: "terminal" },
-  back: { ios: "arrow.left", android: "arrow_back", web: "arrow_back" },
-  braces: { ios: "curlybraces", android: "data_object", web: "data_object" },
-  chat: { ios: "bubble.left", android: "chat_bubble", web: "chat_bubble" },
-  copy: { ios: "doc.on.doc", android: "content_copy", web: "content_copy" },
-  edit: { ios: "pencil", android: "edit", web: "edit" },
-  folder: { ios: "folder", android: "folder_open", web: "folder_open" },
-  search: { ios: "magnifyingglass", android: "search", web: "search" },
-  share: { ios: "square.and.arrow.up", android: "share", web: "share" },
-  sparkles: { ios: "sparkles", android: "auto_awesome", web: "auto_awesome" },
-  thumb: { ios: "hand.thumbsup", android: "thumb_up", web: "thumb_up" },
-} satisfies Record<string, IconName>;
-
+import { formatDate ,IconName, Icon , parseTags, normalizeParam, icons, withAlpha} from "@/utils/common";
 const fallbackSnippet = {
   title: "Snippet not found",
   code: "// This snippet could not be loaded.",
@@ -43,64 +25,10 @@ const fallbackSnippet = {
   updatedAt: "",
 };
 
-function withAlpha(hex: string, alpha: number) {
-  const value = hex.replace("#", "");
-  const red = parseInt(value.slice(0, 2), 16);
-  const green = parseInt(value.slice(2, 4), 16);
-  const blue = parseInt(value.slice(4, 6), 16);
-
-  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-}
-
-function normalizeParam(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function parseTags(value: string | null | undefined) {
-  if (!value) {
-    return [];
-  }
-
-  return value
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
-}
-
-function formatDate(value?: string | null) {
-  if (!value) {
-    return "Just now";
-  }
-
-  const date = new Date(value.replace(" ", "T"));
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function Icon({
-  color,
-  name,
-  size = 22,
-}: {
-  color: string;
-  name: IconName;
-  size?: number;
-}) {
-  return <SymbolView name={name} size={size} tintColor={color} />;
-}
-
 export default function Snippit() {
   const { colors, theme } = useTheme();
   const params = useLocalSearchParams();
-  const idParam = normalizeParam(params.id);
-  const snippetId = idParam && /^\d+$/.test(idParam) ? Number(idParam) : undefined;
+  const snippetId = normalizeParam(params.id);
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);

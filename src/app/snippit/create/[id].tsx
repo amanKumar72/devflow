@@ -7,7 +7,6 @@ import {
   readData,
   upsertSnippit,
 } from "@/utils/sqlite-queries";
-import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -21,90 +20,28 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { parseTags, icons, withAlpha, Icon, normalizeParam } from "@/utils/common";
 
-type IconName = SymbolViewProps["name"];
 
-const icons = {
-  close: { ios: "xmark", android: "close", web: "close" },
-  save: { ios: "square.and.arrow.down", android: "save", web: "save" },
-  tag: { ios: "tag", android: "sell", web: "sell" },
-  sparkles: { ios: "sparkles", android: "auto_awesome", web: "auto_awesome" },
-  align: { ios: "text.alignleft", android: "format_align_left", web: "format_align_left" },
-  braces: { ios: "curlybraces", android: "data_object", web: "data_object" },
-} satisfies Record<string, IconName>;
-
-const defaultCode = `import { useState, useEffect } from 'react';
-
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}`;
-
-function withAlpha(hex: string, alpha: number) {
-  const value = hex.replace("#", "");
-  const red = parseInt(value.slice(0, 2), 16);
-  const green = parseInt(value.slice(2, 4), 16);
-  const blue = parseInt(value.slice(4, 6), 16);
-
-  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-}
-
-function Icon({
-  color,
-  name,
-  size = 22,
-}: {
-  color: string;
-  name: IconName;
-  size?: number;
-}) {
-  return <SymbolView name={name} size={size} tintColor={color} />;
-}
-
-function normalizeParam(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function parseTags(value: string | null | undefined) {
-  if (!value) {
-    return [];
-  }
-
-  return value
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
-}
 
 export default function CreateSnippit() {
   const { colors, theme } = useTheme();
   const params = useLocalSearchParams();
-  const idParam = normalizeParam(params.id);
-  const snippetId = idParam && /^\d+$/.test(idParam) ? Number(idParam) : undefined;
+  const snippetId = normalizeParam(params.id);
 
-  const [code, setCode] = useState(defaultCode);
+  const [title, setTitle] = useState("");
+  const [code, setCode] = useState('');
+  const [selectedLanguageId, setSelectedLanguageId] = useState(1);
+  const [languages, setLanguages] = useState<ProgrammingLanguage[]>([]);
+  const [tagDraft, setTagDraft] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [isDirty, setIsDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [languages, setLanguages] = useState<ProgrammingLanguage[]>([]);
-  const [selectedLanguageId, setSelectedLanguageId] = useState(1);
-  const [tagDraft, setTagDraft] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [title, setTitle] = useState("");
 
   const lineCount = useMemo(() => Math.max(12, code.split("\n").length), [code]);
+  
   const lineNumbers = useMemo(
     () => Array.from({ length: lineCount }, (_, index) => index + 1),
     [lineCount]
@@ -149,7 +86,7 @@ export default function CreateSnippit() {
 
         if (!snippetId) {
           setTitle("");
-          setCode(defaultCode);
+          setCode('');
           setTags([]);
           return;
         }
@@ -158,7 +95,7 @@ export default function CreateSnippit() {
 
         if (!snippet || !isMounted) {
           setTitle("");
-          setCode(defaultCode);
+          setCode('');
           setTags([]);
           return;
         }

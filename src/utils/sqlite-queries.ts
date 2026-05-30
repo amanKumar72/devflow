@@ -85,10 +85,24 @@ async function seedProgrammingLanguages() {
   }
 
   const languages = [
+    ["HTML", "HTML"],
+    ["CSS", "CSS"],
     ["TypeScript", "TS"],
-    ["Rust", "RS"],
+    ["JavaScript", "JS"],
     ["Python", "PY"],
+    ["Rust", "RS"],
     ["Go", "GO"],
+    ["Java", "JAVA"],
+    ["C", "C"],
+    ["C++", "CPP"],
+    ["C#", "CS"],
+    ["PHP", "PHP"],
+    ["Ruby", "RB"],
+    ["Swift", "SWIFT"],
+    ["Kotlin", "KT"],
+    ["Dart", "DART"],
+    ["Scala", "SCALA"],
+    ["R", "R"],
   ];
 
   for (const [name, icon] of languages) {

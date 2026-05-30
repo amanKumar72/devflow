@@ -5,25 +5,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-type IconName = SymbolViewProps["name"];
-
-const icons = {
-  add: { ios: "plus", android: "add", web: "add" },
-  app: { ios: "terminal", android: "terminal", web: "terminal" },
-  bolt: { ios: "bolt", android: "bolt", web: "bolt" },
-  database: { ios: "server.rack", android: "database", web: "database" },
-  search: { ios: "magnifyingglass", android: "search", web: "search" },
-} satisfies Record<string, IconName>;
-
-function withAlpha(hex: string, alpha: number) {
-  const value = hex.replace("#", "");
-  return `rgba(${parseInt(value.slice(0, 2), 16)}, ${parseInt(value.slice(2, 4), 16)}, ${parseInt(value.slice(4, 6), 16)}, ${alpha})`;
-}
-
-function Icon({ color, name, size = 22 }: { color: string; name: IconName; size?: number }) {
-  return <SymbolView name={name} size={size} tintColor={color} />;
-}
+import { IconName,withAlpha, icons, Icon, languageColor } from "@/utils/common";
 
 export default function Home() {
   const { colors, theme } = useTheme();
@@ -51,14 +33,7 @@ export default function Home() {
   return (
     <View style={{ backgroundColor: colors.background, flex: 1 }}>
       <Header colors={colors} topBar={topBar} />
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 112 }} style={{ flex: 1 }}>
-        <View style={{ alignItems: "center", backgroundColor: colors.surfaceContainerLow, borderColor: border, borderRadius: 16, borderWidth: 1, columnGap: 12, flexDirection: "row", minHeight: 76, paddingHorizontal: 18 }}>
-          <Icon color={colors.outline} name={icons.bolt} size={24} />
-          <Text style={{ color: withAlpha(colors.onSurfaceVariant, 0.64), flex: 1, fontFamily: "JetBrains Mono", fontSize: 18 }}>
-            Search commands, snippets, or files...
-          </Text>
-        </View>
-
+      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 112, paddingTop: 5 }} style={{ flex: 1 }}>
         <SectionTitle action="View All" onAction={() => router.push("/snippits")} title="Favorites" colors={colors} />
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
           {(favorites.length ? favorites : recent.slice(0, 4)).map((item) => (
@@ -100,28 +75,21 @@ export default function Home() {
   );
 }
 
-function Header({ colors, topBar }: { colors: ReturnType<typeof useTheme>["colors"]; topBar: string }) {
+export function Header({ colors, topBar }: { colors: ReturnType<typeof useTheme>["colors"]; topBar: string }) {
   return (
     <View style={{ alignItems: "center", backgroundColor: topBar, borderBottomColor: withAlpha(colors.outlineVariant, 0.3), borderBottomWidth: 1, flexDirection: "row", height: 64, justifyContent: "space-between", paddingHorizontal: 16 }}>
       <Icon color={colors.primary} name={icons.app} size={26} />
       <Text style={{ color: colors.onSurface, fontFamily: "Inter", fontSize: 24, fontWeight: "800" }}>DevFlow</Text>
-      <Icon color={colors.onSurfaceVariant} name={icons.search} size={28} />
+      <View></View>
     </View>
   );
 }
 
 function SectionTitle({ action, colors, onAction, title }: { action?: string; colors: ReturnType<typeof useTheme>["colors"]; onAction?: () => void; title: string }) {
   return (
-    <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between", marginBottom: 12, marginTop: 32 }}>
+    <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between", marginBottom: 6, marginTop: 12 }}>
       <Text style={{ color: colors.onSurface, fontFamily: "Inter", fontSize: 24, fontWeight: "800" }}>{title}</Text>
       {action ? <Pressable onPress={onAction}><Text style={{ color: colors.primary, fontFamily: "Inter", fontSize: 11, fontWeight: "800", letterSpacing: 1.4, textTransform: "uppercase" }}>{action}</Text></Pressable> : null}
     </View>
   );
-}
-
-function languageColor(language: string | undefined, colors: ReturnType<typeof useTheme>["colors"]) {
-  if (language?.toLowerCase() === "rust") return "#dea584";
-  if (language?.toLowerCase() === "python") return colors.tertiary;
-  if (language?.toLowerCase() === "go") return "#00add8";
-  return colors.primary;
 }

@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/useTheme";
+import { IconName,withAlpha } from "@/utils/common";
 
 type TabIconName = SymbolViewProps["name"];
 
@@ -20,15 +21,6 @@ const tabs: Record<string, { icon: TabIconName }> = {
     icon: { ios: "gearshape", android: "settings", web: "settings" },
   },
 };
-
-function withAlpha(hex: string, alpha: number) {
-  const value = hex.replace("#", "");
-  const red = parseInt(value.slice(0, 2), 16);
-  const green = parseInt(value.slice(2, 4), 16);
-  const blue = parseInt(value.slice(4, 6), 16);
-
-  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-}
 
 function TabIcon({
   activeBackground,
